@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 /**
  * The struct to define an adaptive color set
@@ -60,6 +61,18 @@ const colorStruct = {
   ]
 };
 
+const imageStruct = {
+  idiom: 'universal',
+  filename: '',
+  scale: '1x',
+  appearances : [
+    {
+      appearance: 'luminosity',
+      value: 'dark'
+    }
+  ]
+};
+
 /**
  * Converts a color from the hex-space to the RGB space.
  * 
@@ -83,6 +96,10 @@ function hexToRgb(hex) {
   } : null;
 }
 
+function sha1(value) {
+	return crypto.createHash('sha1').update(value).digest('hex');
+}
+
 /**
  * Rewrite native iOS extension plist if app version changes.
  *
@@ -95,7 +112,7 @@ exports.init = function(_logger, _config, cli, appc) {
   cli.addHook('build.pre.build', function(build, finished) {
     triggered = true;
 
-    const colorsFile = path.resolve('./app/assets/json/colors.json');
+    const colorsFile = path.resolve('./Resources/iphone/json/colors.json');
     const assetCatalogFile = path.resolve('./build/iphone/Assets.xcassets');
 
     if (!fs.existsSync(colorsFile) || !fs.existsSync(assetCatalogFile)) {
@@ -103,6 +120,7 @@ exports.init = function(_logger, _config, cli, appc) {
       return;
     }
 
+    // Generate semantic colors
     const colors = JSON.parse(fs.readFileSync(colorsFile, 'utf-8'));
 
     for (const color of Object.keys(colors)) {
@@ -140,6 +158,80 @@ exports.init = function(_logger, _config, cli, appc) {
 
       fs.mkdirSync(colorDir);
       fs.writeFileSync(path.join(colorDir, 'Contents.json'), JSON.stringify(colorSource, null, '\t'));
+    }
+
+    // Generate semantic images
+
+    const imagesPath = path.resolve('./Resources/iphone/images');
+
+    if (!fs.existsSync(imagesPath)) {
+      finished();
+      return;
+    }
+
+    const imageNames = fs.readdirSync(imagesPath);
+
+    for (const image of imageNames) {
+      const filename = image.split('.').slice(0, -1).join('.')
+      const extension = image.split('.').pop();
+      const hash = sha1(`images/${filename}.${extension}`);
+      const baseAssetName = `${sha1(`images/${filename.replace('-dark', '').replace('@2x', '').replace('@3x', '')}.${extension}`)}.imageset`;
+      const baseAssetPath = path.join(assetCatalogFile, baseAssetName);
+
+      // Skip all non-assets
+      if (!image.match(/^(.*?)(@[23]x)?(~iphone|~ipad)?\.(png|jpg)$/)) continue;
+
+      // Copy over dark images to base directory
+      if (filename.indexOf('-dark') !== -1) {
+        console.log('COPY FROM: ' + path.resolve('./Resources/iphone/images/' + image) + ', TO: ' + path.join(assetCatalogFile, baseAssetName, image));
+        fs.copyFileSync(path.resolve('./Resources/iphone/images/' + image), path.join(assetCatalogFile, baseAssetName, image));
+      }
+
+      // Skip hi-res images for raw filename checks
+      if (image.indexOf('@2x') !== -1 || image.indexOf('@3x') !== -1) {
+        continue;
+      }
+
+      // Update asset catalog reference
+      if (fs.existsSync(baseAssetPath)) {
+        const catalogEntryContentsPath = path.join(baseAssetPath, 'Contents.json');
+        const catalogEntryContents = JSON.parse(fs.readFileSync(catalogEntryContentsPath, 'utf-8'));
+
+        let changed = false;
+
+        // Set non-retina values
+        if (imageNames.includes(`${filename}-dark.${extension}`)) {
+          const data = Object.assign({}, imageStruct);
+          data.scale = '1x';
+          data.filename = `${filename}-dark.${extension}`;
+          catalogEntryContents.images.push(data);
+          changed = true;
+        }
+        
+        // Set @2x retina values
+        if (imageNames.includes(`${filename}-dark@2x.${extension}`)) {
+          const data = Object.assign({}, imageStruct);
+          data.scale = '2x';
+          data.filename = `${filename}-dark@2x.${extension}`;
+          catalogEntryContents.images.push(data);
+          changed = true;
+        }
+
+        // Set @3x retina values
+        if (imageNames.includes(`${filename}-dark@3x.${extension}`)) {
+          const data = Object.assign({}, imageStruct);
+          data.scale = '3x';
+          data.filename = `${filename}-dark@3x.${extension}`;
+          catalogEntryContents.images.push(data);
+          changed = true;
+        }
+
+        // If something changed, update the base asset catalog entry
+        if (changed) {
+          fs.writeFileSync(catalogEntryContentsPath, JSON.stringify(catalogEntryContents, null, '\t'));
+          continue;
+        }
+      }
     }
 
     finished();

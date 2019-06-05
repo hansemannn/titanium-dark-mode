@@ -1,10 +1,10 @@
 # iOS 13+ Dark Mode in Titanium
 
-Full support for iOS 13+ dark mode in Titanium. Even works if colors are changed at runtime.
+Full support for iOS 13+ dark mode in Titanium. Works for both semantic colors and images.
 
 ## The Magic
 
-This project includes a CLI hook that generates semantic colors for the iOS Asset Catalog based on a JSON
+This project includes a CLI hook that generates semantic colors and images for the iOS Asset Catalog based on a JSON
 file of colors that can even be used cross-platform and backwards compatible. It hooks into the SDK process
 between generating the asset catalog and compiling the app, so you can even change colors between builds
 without the need of clean-building the app again.
@@ -36,6 +36,18 @@ The following project- and OS-requirements are necessary:
 - [x] Link the native `ti.darkmode` module to your project like any other native module
 - [x] Alloy: Copy your color JSON file to `<project>/app/assets/json/colors.json`
 - [x] Classic: Copy your color JSON file to `<project>/Resources/json/colors.json`
+- [x] For semantic images, make sure they are following the following scheme (`-dark` suffix):
+```sh
+# Default (Light)
+image.png
+image@2x.png
+image@3x.png
+
+# Dark
+image-dark.png
+image-dark@2x.png
+image-dark@3x.png
+```
 - [x] Map the colors on runtime for older devices or Android (this is just an example of how this could look like):
 ```js
 function initializeColors() {
