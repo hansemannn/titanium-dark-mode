@@ -2,6 +2,8 @@
 
 Full support for iOS 13+ dark mode in Titanium. Even works if colors are changed at runtime.
 
+<img src="./example.png" alt="Example" />
+
 ## The Magic
 
 This project includes a CLI hook that generates semantic colors for the iOS Asset Catalog based on a JSON
