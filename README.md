@@ -53,11 +53,11 @@ function initializeColors() {
 }
 ```
 
-## Notes
+## ToDos
 
-The native module returns a native `TiColor` object that holds a reference to the native `UIColor` object. Unfortunately, not all
-Titanium API's can consume this object so far, so you might require an SDK update to support this to 100 %. A pull request
-is pending and should be merged before iOS 13 is released.
+- [ ] This may break incremental builds, since we generate files to the build dir that are not tracked by the CLI so far
+- [ ] Make all color-setters ready to receive a `TiColor` instance (see [this pull request](https://github.com/appcelerator/titanium_mobile/pull/10937) for details)
+- [ ] Eventually move this to the SDK
 
 ## License
 
