@@ -3,7 +3,7 @@ const path = require('path');
 const crypto = require('crypto');
 
 /**
- * The struct to define an adaptive color set
+ * A struct to define an adaptive color set.
  */
 const colorStruct = {
   info: {
@@ -61,6 +61,9 @@ const colorStruct = {
   ]
 };
 
+/**
+ * A struct to define an adaptive image set.
+ */
 const imageStruct = {
   idiom: 'universal',
   filename: '',
@@ -183,7 +186,6 @@ exports.init = function(_logger, _config, cli, appc) {
 
       // Copy over dark images to base directory
       if (filename.indexOf('-dark') !== -1) {
-        console.log('COPY FROM: ' + path.resolve('./Resources/iphone/images/' + image) + ', TO: ' + path.join(assetCatalogFile, baseAssetName, image));
         fs.copyFileSync(path.resolve('./Resources/iphone/images/' + image), path.join(assetCatalogFile, baseAssetName, image));
       }
 
