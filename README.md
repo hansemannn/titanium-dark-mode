@@ -67,9 +67,9 @@ function initializeColors() {
 
 ## ToDos
 
-- [ ] This may break incremental builds, since we generate files to the build dir that are not tracked by the CLI so far
+- [ ] Support sub-folders
+- [ ] This currently breaks incremental builds, because the Xcode project is changed after it's hash is stored
 - [ ] Make all color-setters ready to receive a `TiColor` instance (see [this pull request](https://github.com/appcelerator/titanium_mobile/pull/10937) for details)
-- [ ] Eventually move this to the SDK
 
 ## License
 
