@@ -30,7 +30,7 @@
 {
   ENSURE_SINGLE_ARG(color, NSString);
 
-  if ([TiUtils isIOSVersionOrGreater:@"13.0"]) {
+  if ([TiUtils isIOSVersionOrGreater:@"11.0"]) {
     return [[TiColor alloc] initWithColor:[UIColor colorNamed:color] name:nil];
   } else {
     return [[TiColor alloc] initWithColor:UIColor.blackColor name:@"black"];

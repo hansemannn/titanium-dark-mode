@@ -6,9 +6,9 @@ version: 1.0.0
 apiversion: 2
 architectures: armv7 arm64 i386 x86_64
 description: titanium-darkmode
-author: Your Name
-license: Specify your license
-copyright: Copyright (c) 2019 by Your Company
+author: Hans Knöchel
+license: MIT
+copyright: Copyright (c) 2019 by Hans Knöchel
 
 # these should not be edited
 name: titanium-darkmode
