@@ -4,6 +4,11 @@ Full support for iOS 13+ dark mode in Titanium. Works for both semantic colors a
 
 <img src="./example.png" alt="Example" />
 
+## ⚠️ Note
+
+You should only use this plugin if you want to support dark mode with a Titanium version < 8.2.0. Titanium
+8.2.0 and later added support for dark mode based on this plugin internally, so this plugin isn't needed anymore.
+
 ## The Magic
 
 This project includes a CLI hook that generates semantic colors and images for the iOS Asset Catalog based on a JSON
@@ -69,7 +74,6 @@ function initializeColors() {
 
 - [ ] Support sub-folders
 - [ ] This currently breaks incremental builds, because the Xcode project is changed after it's hash is stored
-- [ ] Make all color-setters ready to receive a `TiColor` instance (see [this pull request](https://github.com/appcelerator/titanium_mobile/pull/10937) for details)
 
 ## License
 
