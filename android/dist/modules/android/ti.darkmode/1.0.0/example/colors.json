@@ -1,0 +1,14 @@
+{
+    "backgroundColor": {
+        "light": "#f6f6f9",
+        "dark": "#000000"
+    },
+    "textColor": {
+        "light": "#000000",
+        "dark": "#ffffff"
+    },
+    "tintColor": {
+        "light": "#ff0000",
+        "dark": "#00ff00"
+    }
+}

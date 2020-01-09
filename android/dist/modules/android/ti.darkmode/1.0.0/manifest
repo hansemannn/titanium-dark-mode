@@ -1,0 +1,18 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 1.0.0
+apiversion: 4
+architectures: arm64-v8a armeabi-v7a x86
+description: titanium-dark-mode
+author: Your Name
+license: Specify your license
+copyright: Copyright (c) 2019 by Your Company
+
+# these should not be edited
+name: titanium-dark-mode
+moduleid: ti.darkmode
+guid: 561ba169-dd41-461e-b73b-f8e572991f84
+platform: android
+minsdk: 8.2.0
